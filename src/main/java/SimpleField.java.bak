@@ -1,0 +1,84 @@
+/**
+ * Created by vlado on 06.03.17.
+ */
+public class SimpleField {
+    private byte[]int[]int[] field;
+    private int width;
+    private int height;
+    private int counter = 0;
+    private byte activeSide = 0;
+    private byte otherSide = 1;
+
+    public SimpleField(int myWidth, int myHeight){
+        width = myWidth;
+        height = myHeight;
+        field = new byte[2]int[width]int[height];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                field[0][j][i] = 0;
+            }
+        }
+    }
+
+    /** Das Spielfeld an der Konsole ausgeben.
+     *
+     */
+    public void printField(){
+        System.out.println("\nStep " + counter);
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                System.out.print(field[activeSide][j][i]);
+            }
+            System.out.print("\n");
+        }
+    }
+
+    protected transformField(int j, int i){
+        int nSum = field[activeSide][j-1][i-1] + field[activeSide][j][i-1] +  field[activeSide][j+1][i-1] +
+                field[activeSide][j-1][i]  +  field[activeSide][j+1][i] +
+                field[activeSide][j-1][i+1] + field[activeSide][j][i+1] +  field[activeSide][j+1][i+1];
+
+        if (field[activeSide][j][i] == 1) { // lebende Zelle
+            if (nSum <= 1 || nSum > 3){ // mit weniger als zwei oder mehr als drei Nachbarn -> sterben
+                field[otherSide][j][i] = 0;
+            } else {
+                field[otherSide][j][i] = 1; // mit zwei oder drei Nachbarn bleiben sie am Leben
+            }
+        } else { // tote Zelle
+            if (nSum == 3){
+                field[otherSide][j][i] = 1; // mit genau drei Nachbarn erwacht sie zum Leben
+            } else {
+                field[otherSide][j][i] = 0; // ansonsten bleibt sie tot
+            }
+        }
+    }
+
+    public void step(){
+        counter++;
+        for (int i = 1; i < (height - 1); i++) {
+            for (int j = 1; j < (width - 1); j++) {
+                transformField(j, i);
+            }
+        }
+        swapSides();
+    }
+
+    public void setField(int x, int y, int val){
+        field[activeSide][width / 2 + x][height / 2 - y] = val;
+    }
+
+    private void swapSides(){
+        otherSide = activeSide;
+        activeSide = !activeSide;
+    }
+
+    public void initSmallExploder(){
+        setField(0, 2, 1);
+        setField(-1, 1, 1);
+        setField(0, 1, 1);
+        setField(1, 1, 1);
+        setField(-1, 0, 1);
+        setField(1, 0, 1);
+        setField(0, -1, 1);
+    }
+}
