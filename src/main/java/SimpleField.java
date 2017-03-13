@@ -18,29 +18,33 @@ public class SimpleField {
         }
     }
 
-    // Das Spielfeld an der Konsole ausgeben.
-    public void printField(){
+    public String toString(){
+        StringBuilder s = new StringBuilder();
         for (int i = 1; i < height; i++) {
             for (int j = 1; j < width; j++) {
-                System.out.print(field[j][i]);
+                if (field[j][i] == 1) {
+                    s.append("1");
+                } else {
+                    s.append("0");
+                }
             }
-            System.out.print("\n");
+            s.append("\n");
         }
+        return s.toString();
     }
 
-    protected int getNeighbourSum(int x, int y){
-        assert (x > 0 && x < width) : "X-Wert außerhalb der Feldgröße versucht!";
-        assert (y > 0 && x < height) : "Y-Wert außerhalb der Feldgröße versucht!";
-
+    int getNeighbourSum(int x, int y){
+        checkCoord(x,y);
         int nSum = field[x-1][y-1] + field[x][y-1] +  field[x+1][y-1] +
                 field[x-1][y]  +  field[x+1][y] +
                 field[x-1][y+1] + field[x][y+1] +  field[x+1][y+1];
         return nSum;
     }
     
-    public int getNewFieldVal(int x, int y){
+    int getNewFieldVal(int x, int y){
         int newFieldVal;
         int neighbourSum = getNeighbourSum(x, y);
+        checkCoord(x,y);
         if (field[x][y] == 1) { // lebende Zelle
             if (neighbourSum <= 1 || neighbourSum > 3){ // mit weniger als zwei oder mehr als drei Nachbarn -> tot
                 newFieldVal = 0;
@@ -57,8 +61,13 @@ public class SimpleField {
         return newFieldVal;
     }
 
-    public void setField(int x, int y, int val){
+    void setField(int x, int y, int val){
+        checkCoord(x,y);
         field[x][y] = val;
     }
 
+    private void checkCoord(int x, int y) {
+        assert (x > 0 && x < width) : "X-Wert außerhalb der Feldgröße versucht!";
+        assert (y > 0 && x < height) : "Y-Wert außerhalb der Feldgröße versucht!";
+    }
 }

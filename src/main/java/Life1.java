@@ -3,6 +3,8 @@
  *
  *  Life1 - a simple version of John Horton Conway's Game of Life for learning (esp. of testing)
  *
+ *  The field size is limited by HEIGHT and WIDTH.
+ *
     Copyright (C) 2017 Vlado Plaga
 
     This program is free software: you can redistribute it and/or modify
@@ -25,12 +27,12 @@ public class Life1 {
 
     public static void main(String[] args) {
         LifeSim sim = new LifeSim(WIDTH, HEIGHT);
-//        sim.print();
         sim.initSmallExploder();
-        sim.print();
-        for (int i = 0; i < 5; i++) {
+//        sim.initGlider();
+        sim.printField();
+        for (int i = 0; i < 15; i++) {
             sim.step();
-            sim.print();
+            sim.printField();
         }
 
     }
